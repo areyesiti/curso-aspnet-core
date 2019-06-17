@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CoreGram</name>
+    </assembly>
+    <members>
+        <member name="M:CoreGram.Controllers.UserController.GetAll">
+            <summary>
+            hello
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
