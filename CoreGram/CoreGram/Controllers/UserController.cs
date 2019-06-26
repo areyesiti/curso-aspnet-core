@@ -44,7 +44,7 @@ namespace CoreGram.Controllers
 
         // GET api/users
         /// <summary>
-        /// hello
+        /// Obtiene el listado de todos los usuarios
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -53,14 +53,22 @@ namespace CoreGram.Controllers
             return _repository.GetAll();
         }
 
-        // GET api/users/5
+        /// <summary>
+        /// Obtiene la información de un usuario
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public ActionResult<User> GetById(int id)
         {
             return _repository.GetById(id);
         }
 
-        // POST api/users
+        /// <summary>
+        /// Añade un usuario
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] User item)
         {
@@ -69,7 +77,12 @@ namespace CoreGram.Controllers
             return Ok(item);
         }
 
-        // PUT api/users/5
+        /// <summary>
+        /// Actualiza la información de un usuario
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] User item)
         {
@@ -83,7 +96,11 @@ namespace CoreGram.Controllers
             return Ok(item);
         }
 
-        // DELETE api/users/5
+        /// <summary>
+        /// Elimina un usuario
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
