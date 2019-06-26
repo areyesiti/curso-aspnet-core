@@ -22,7 +22,7 @@ namespace CoreGram.Controllers
             _context = context;
             _repository = repository;
 
-            if (_context.User.Count() == 0)
+            if (_context.Users.Count() == 0)
             {
                 User user1 = new User
                 {
@@ -72,7 +72,7 @@ namespace CoreGram.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] User item)
         {
-            await _context.User.AddAsync(item);
+            await _context.Users.AddAsync(item);
             await _context.SaveChangesAsync();
             return Ok(item);
         }
@@ -104,7 +104,7 @@ namespace CoreGram.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var userFinded = await _context.User.FindAsync(id);
+            var userFinded = await _context.Users.FindAsync(id);
 
             if (userFinded == null)
             {

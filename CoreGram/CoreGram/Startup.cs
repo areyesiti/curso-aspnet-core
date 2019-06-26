@@ -33,7 +33,10 @@ namespace CoreGram
         {
             services.AddCors();
 
-            services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("InstagramDB"));
+            //services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("InstagramDB"));
+
+            services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options => {
 

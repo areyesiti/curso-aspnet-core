@@ -17,12 +17,12 @@ namespace CoreGram.Repositories
 
         public List<User> GetAll()
         {
-            return _context.User.ToList();
+            return _context.Users.ToList();
         }
 
         public User GetById(int userId)
         {
-            var user = _context.User.Find(userId);
+            var user = _context.Users.Find(userId);
 
             if (user == null)
             {
