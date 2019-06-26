@@ -73,6 +73,7 @@ namespace CoreGram
             //services.AddTransient(typeof(UserRepository));
             //services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<UserRepository>();
+            services.AddTransient<UserProfileRepository>();
 
         }
 
