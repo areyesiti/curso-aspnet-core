@@ -13,6 +13,7 @@ namespace CoreGram.Registers
         {
             services.AddTransient<UserRepository>();
             services.AddTransient<UserProfileRepository>();
+            services.AddTransient<FollowerRepository>();
             return services;
         }
     }

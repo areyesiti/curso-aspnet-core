@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CoreGram.Migrations
 {
-    public partial class MigracionInicial : Migration
+    public partial class Inicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,28 +26,20 @@ namespace CoreGram.Migrations
                 name: "UsersProfiles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<int>(nullable: false),
                     FullName = table.Column<string>(nullable: true),
-                    Image = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    Image = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UsersProfiles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UsersProfiles_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_UsersProfiles_Users_Id",
+                        column: x => x.Id,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UsersProfiles_UserId",
-                table: "UsersProfiles",
-                column: "UserId",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

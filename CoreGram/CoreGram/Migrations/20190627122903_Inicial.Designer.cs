@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoreGram.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190626164101_MigracionInicial")]
-    partial class MigracionInicial
+    [Migration("20190627122903_Inicial")]
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,20 +41,13 @@ namespace CoreGram.Migrations
 
             modelBuilder.Entity("CoreGram.Data.Model.UserProfile", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("Id");
 
                     b.Property<string>("FullName");
 
                     b.Property<string>("Image");
 
-                    b.Property<int>("UserId");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("UsersProfiles");
                 });
@@ -63,7 +56,7 @@ namespace CoreGram.Migrations
                 {
                     b.HasOne("CoreGram.Data.Model.User", "User")
                         .WithOne("Profile")
-                        .HasForeignKey("CoreGram.Data.Model.UserProfile", "UserId")
+                        .HasForeignKey("CoreGram.Data.Model.UserProfile", "Id")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

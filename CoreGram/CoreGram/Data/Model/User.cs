@@ -9,8 +9,7 @@ namespace CoreGram.Data.Model
 {
     [Table("Users")]
     public class User
-    {        
-        [Key]
+    {                
         public int Id { get; set; }
 
         [MaxLength(20)]
@@ -20,5 +19,8 @@ namespace CoreGram.Data.Model
         public string Email { get; set; }
 
         public UserProfile Profile { get; set; }
+
+        public IEnumerable<Follower> UserFollowers { get; set; }
+        public IEnumerable<Follower> UserFollowings { get; set; }
     }
 }
