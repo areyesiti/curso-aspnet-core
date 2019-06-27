@@ -4,7 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoreGram.Data;
+using CoreGram.Helpers;
+using CoreGram.Registers;
 using CoreGram.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +36,15 @@ namespace CoreGram
         {
             services.AddCors();
 
+            // Configuración y registro de automapper
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             //services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("InstagramDB"));
 
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
@@ -49,31 +61,34 @@ namespace CoreGram
 
                 });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Title = "Instagram API",
-                    Version = "v1",
-                    Description = "Práctica del curso de ASP.NET Core",
-                    Contact = new Contact
-                    {
-                        Name = "Alberto Reyes",
-                        Email = "areyes@iti.es",
-                        Url = "http://www.iti.es"
-                    }
-                });
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new Info
+            //    {
+            //        Title = "Instagram API",
+            //        Version = "v1",
+            //        Description = "Práctica del curso de ASP.NET Core",
+            //        Contact = new Contact
+            //        {
+            //            Name = "Alberto Reyes",
+            //            Email = "areyes@iti.es",
+            //            Url = "http://www.iti.es"
+            //        }
+            //    });
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //    c.IncludeXmlComments(xmlPath);
 
-            });
+            //});
 
             //services.AddTransient(typeof(UserRepository));
             //services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<UserRepository>();
-            services.AddTransient<UserProfileRepository>();
+            //services.AddTransient<UserRepository>();
+            //services.AddTransient<UserProfileRepository>();
+
+            services.addCustomRegisters();
+            services.addSwaggerRegisters();
 
         }
 

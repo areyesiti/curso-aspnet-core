@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreGram.Data;
+using CoreGram.Data.Dto;
 using CoreGram.Data.Model;
 using CoreGram.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ namespace CoreGram.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult<List<User>> GetAll()
+        public ActionResult<List<UserInfoDto>> GetAll()
         {
             return _repository.GetAll();
         }
@@ -59,7 +60,7 @@ namespace CoreGram.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public ActionResult<User> GetById(int id)
+        public ActionResult<UserInfoDto> GetById(int id)
         {
             return _repository.GetById(id);
         }

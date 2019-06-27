@@ -1,4 +1,6 @@
-﻿using CoreGram.Data;
+﻿using AutoMapper;
+using CoreGram.Data;
+using CoreGram.Data.Dto;
 using CoreGram.Data.Model;
 using System;
 using System.Collections.Generic;
@@ -9,19 +11,22 @@ namespace CoreGram.Repositories
 {
     public class UserProfileRepository
     {
-        private DataContext _context;
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public UserProfileRepository(DataContext context)
+        public UserProfileRepository(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public List<UserProfile> GetAll()
+        public List<UserProfileDto> GetAll()
         {
-            return _context.UsersProfiles.ToList();            
+            var model = _context.UsersProfiles.ToList();
+            return _mapper.Map<List<UserProfile>, List<UserProfileDto>>(model);
         }
 
-        public UserProfile GetById(int profileId)
+        public UserProfileDto GetById(int profileId)
         {
             var model = _context.UsersProfiles.Find(profileId);
             if (model == null)
@@ -29,7 +34,7 @@ namespace CoreGram.Repositories
                 throw new Exception("Perfil de usuario no encontrado");
             }
 
-            return model;
+            return _mapper.Map<UserProfileDto>(model);
         }
     }
 }
