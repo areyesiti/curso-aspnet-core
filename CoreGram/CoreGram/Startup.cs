@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CoreGram.Data;
 using CoreGram.Helpers;
+using CoreGram.Middlewares;
 using CoreGram.Registers;
 using CoreGram.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -97,6 +98,22 @@ namespace CoreGram
         {
             app.UseSwagger();
 
+            
+
+            //app.Use(async (context, next) =>
+            //{
+            //    Console.WriteLine("Hola desde el primer middleware");
+            //    await next.Invoke();
+            //    Console.WriteLine("Adiós desde el primer middleware");
+            //});
+
+            //app.Use(async (context, next) =>
+            //{
+            //    Console.WriteLine("Hola desde el segundo middleware");
+            //    await next.Invoke();
+            //    Console.WriteLine("Adiós desde el segundo middleware");
+            //});
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
@@ -111,6 +128,8 @@ namespace CoreGram
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseErrorhandlerException();
 
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 

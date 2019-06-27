@@ -1,4 +1,5 @@
-﻿using CoreGram.Data.Model;
+﻿using CoreGram.Data.Configurations;
+using CoreGram.Data.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -40,10 +41,23 @@ namespace CoreGram.Data
                         .HasForeignKey(x => x.UserId)
                         .OnDelete(DeleteBehavior.Restrict);
 
+            //modelBuilder.Entity<Post>()
+            //            .ToTable("Posts")
+            //            .HasKey(x => x.Id);
+
+            //modelBuilder.Entity<Post>()
+            //            .HasOne<User>(x => x.User)
+            //            .WithMany(x => x.Posts)
+            //            .HasForeignKey(x => x.UserId)
+            //            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.ApplyConfiguration(new PostConfiguration());
+
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserProfile> UsersProfiles { get; set; }
         public DbSet<Follower> Followers { get; set; }
+        public DbSet<Post> Posts { get; set; }
     }
 }

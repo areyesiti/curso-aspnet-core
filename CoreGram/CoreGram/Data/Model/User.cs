@@ -22,5 +22,6 @@ namespace CoreGram.Data.Model
 
         public IEnumerable<Follower> UserFollowers { get; set; }
         public IEnumerable<Follower> UserFollowings { get; set; }
+        public IEnumerable<Post> Posts { get; set; }
     }
 }

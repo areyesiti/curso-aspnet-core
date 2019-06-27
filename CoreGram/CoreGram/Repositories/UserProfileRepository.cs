@@ -36,5 +36,50 @@ namespace CoreGram.Repositories
 
             return _mapper.Map<UserProfileDto>(model);
         }
+
+        public UserProfileDto Update(int profileId, UserProfileDto dto)
+        {
+            UserProfile model;
+
+            if (dto.Id == 0) dto.Id = profileId;
+
+            var user = _context.Users.Find(dto.Id);
+            if (user == null)
+            {
+                throw new Exception("Usuario no encontrado");
+            }
+
+            var profile = _context.UsersProfiles.Find(profileId);
+            
+
+            if (profile == null)
+            {
+                model = _mapper.Map<UserProfile>(dto);
+                _context.UsersProfiles.Add(model);
+            }
+            else
+            {
+                model = _mapper.Map<UserProfile>(dto);
+                _context.UsersProfiles.Update(model);
+            }
+
+            _context.SaveChanges();
+            return _mapper.Map<UserProfileDto>(model);
+
+        }
+
+        public UserProfileDto Delete (int profileId)
+        {
+            var model = _context.UsersProfiles.Find(profileId);
+            if (model == null)
+            {
+                throw new Exception("Perfil de usuario no encontrado");
+            }
+
+            _context.UsersProfiles.Remove(model);
+            _context.SaveChanges();
+
+            return _mapper.Map<UserProfileDto>(model);
+        }
     }
 }

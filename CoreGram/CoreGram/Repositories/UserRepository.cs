@@ -2,6 +2,7 @@
 using CoreGram.Data;
 using CoreGram.Data.Dto;
 using CoreGram.Data.Model;
+using CoreGram.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace CoreGram.Repositories
         {
             //var user = _context.Users.Find(userId);
 
+            throw new NotFoundException("Usuario no encontrado");
+
             var user = _context.Users
                 .Where(x => x.Id == userId)
                 .Include(x => x.Profile)
@@ -38,7 +41,7 @@ namespace CoreGram.Repositories
 
             if (user == null)
             {
-                throw new Exception("Usuario no encontrado");
+                throw new NotFoundException("Usuario no encontrado");
             }
 
             var response = _mapper.Map<UserInfoDto>(user);

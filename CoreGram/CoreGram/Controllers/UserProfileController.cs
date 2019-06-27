@@ -33,5 +33,17 @@ namespace CoreGram.Controllers
             return _repository.GetById(profileId);
         }
 
+        [HttpPut("{profileId}")]
+        public ActionResult<UserProfileDto> Update(int profileId, [FromBody]UserProfileDto dto)
+        {
+            return _repository.Update(profileId, dto);
+        }
+
+        [HttpDelete("{profileId}")]
+        public ActionResult<UserProfileDto> Delete(int profileId)
+        {
+            return _repository.Delete(profileId);
+        }
+
     }
 }

@@ -50,7 +50,7 @@ namespace CoreGram.Controllers
         /// <returns></returns>
         [HttpGet]
         public ActionResult<List<UserInfoDto>> GetAll()
-        {
+        {            
             return _repository.GetAll();
         }
 
