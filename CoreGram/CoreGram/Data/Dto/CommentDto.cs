@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoreGram.Data.Model
+namespace CoreGram.Data.Dto
 {
-    public class Post
+    public class CommentDto
     {
         public int Id { get; set; }
+        public int PostId { get; set; }
         public int UserId { get; set; }
-        public string Picture { get; set; }
-        public DateTime date { get; set; }
-        public User User {get; set;}
+        public string Remark { get; set; }
     }
 }

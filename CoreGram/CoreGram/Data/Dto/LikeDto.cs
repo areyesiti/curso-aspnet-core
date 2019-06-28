@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CoreGram.Data.Model
+namespace CoreGram.Data.Dto
 {
-    public class Follower
+    public class LikeDto
     {
+        public int PostId { get; set; }
         public int UserId { get; set; }
-        public int FollowerId { get; set; }
         public DateTime Date { get; set; }
-        public User UserFollower { get; set; }
-        public User UserFolling { get; set; }
     }
 }

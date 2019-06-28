@@ -13,19 +13,31 @@ namespace CoreGram.Registers
     {
         public static IServiceCollection addSwaggerRegisters(this IServiceCollection services)
         {
+            // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Title = "Instagram API",
+                c.SwaggerDoc("v1", new Info {
+                    Title = "CoreGram API",
                     Version = "v1",
                     Description = "Práctica del curso de ASP.NET Core",
-                    Contact = new Contact
+                    Contact =  new Contact
                     {
                         Name = "Alberto Reyes",
                         Email = "areyes@iti.es",
                         Url = "http://www.iti.es"
                     }
+                });
+                
+                c.AddSecurityDefinition("Bearer",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Introduzca la palabra 'Bearer' seguido de un espacio en blanco y el token",
+                        Name = "Authorization",
+                        Type = "apiKey"
+                    });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Bearer", Enumerable.Empty<string>() },
                 });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

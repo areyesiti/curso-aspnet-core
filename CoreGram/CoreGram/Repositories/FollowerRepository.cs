@@ -1,18 +1,20 @@
-﻿using AutoMapper;
-using CoreGram.Data;
-using CoreGram.Data.Dto;
-using CoreGram.Data.Model;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using CoreGram.Data;
+using CoreGram.Data.Dto;
+using CoreGram.Data.Models;
+using CoreGram.Helpers;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace CoreGram.Repositories
-{    
+{
     public class FollowerRepository
     {
-        private readonly DataContext _context;
+        private DataContext _context;
         private readonly IMapper _mapper;
 
         public FollowerRepository(DataContext context, IMapper mapper)
@@ -21,42 +23,88 @@ namespace CoreGram.Repositories
             _mapper = mapper;
         }
 
-        public List<FollowerInfoDto> GetFollowers(int userId)
+        public IEnumerable<FollowerInfoDto> GetFollowers(int userId)
         {
+            // Obtenemos el usuario y comprobamos que existe
             var user = _context.Users.Find(userId);
-
             if (user == null)
             {
-                throw new Exception("El usuario no existe");
-            }
+                throw new NotFoundException("El usuario no existe");
+            }       
 
+            // Obtenemos los seguidores de un usuario incluyendo el perfil de usuario de estos y ordenando por Login
             var model = _context.Followers
                 .Where(x => x.UserId == userId)
                 .Include(x => x.UserFollower)
-                    .ThenInclude(x => x.Profile)
+                    .ThenInclude(x => x.Profile)                
                 .OrderBy(x => x.UserFollower.Login)
                 .ToList();
 
+            // Mapeamos la lista con automapper
+            return _mapper.Map<List<Follower>, List<FollowerInfoDto>>(model);            
+        }
+
+        public IEnumerable<FollowerInfoDto> GetFollowings(int userId)
+        {
+            // Obtenemos el usuario y comprobamos que existe
+            var user = _context.Users.Find(userId);
+            if (user == null)
+            {
+                throw new NotFoundException("El usuario no existe");
+            }
+
+            // Obtenemos los seguidos de un usuario incluyendo el perfil de usuario de estos y ordenando por Login
+            var model = _context.Followers
+                .Where(x => x.FollowerId == userId)
+                .Include(x => x.UserFollowing)
+                    .ThenInclude(x => x.Profile)
+                .OrderBy(x => x.UserFollowing.Login)
+                .ToList();
+
+            // Mapeamos la lista con automapper
             return _mapper.Map<List<Follower>, List<FollowerInfoDto>>(model);
         }
 
-        public List<FollowerInfoDto> GetFollowings(int userId)
+        public FollowerDto Create(FollowerDto dto)
         {
-            var user = _context.Users.Find(userId);
+            
+            // Obtenemos la entidad follower para un usuario y un follower
+            var follower = _context.Followers.Find(dto.UserId, dto.FollowerId);
 
-            if (user == null)
+            // Comprobamos si ya un usuario ya sigue a otro usuario
+            if (follower != null)
             {
-                throw new Exception("El usuario no existe");
+                throw new NotFoundException("Ya sigues a este usuario");
             }
 
-            var model = _context.Followers
-                .Where(x => x.FollowerId == userId)
-                .Include(x => x.UserFolling)
-                    .ThenInclude(x => x.Profile)
-                .OrderBy(x => x.UserFolling.Login)
-                .ToList();
+            // Comprobamos si se pretende seguir un usuario a si mismo
+            if (dto.UserId == dto.FollowerId)
+            {
+                throw new NotFoundException("No puedes seguirte a ti mismo");
+            }
 
-            return _mapper.Map<List<Follower>, List<FollowerInfoDto>>(model);
+            // Mapeamos el dto a la entidad, la añadimos al contexto, guardamos y devolvemos el dto de followers
+            var model = _mapper.Map<Follower>(dto);
+            _context.Followers.Add(model);
+            _context.SaveChanges();
+            return _mapper.Map<FollowerDto>(model);
+        }
+
+        public FollowerDto Delete(int userId, int followerId)
+        {
+            // Obtenemos y comprobamos si existe la entidad followers para un usuario y un follower
+            var model = _context.Followers.Find(userId, followerId);
+            if (model != null)
+            {
+                // Si es así la eliminamos, guardamos y mapeamos la respuesta
+                _context.Followers.Remove(model);
+                _context.SaveChanges();
+                return _mapper.Map<FollowerDto>(model);
+            }
+            else
+            {
+                throw new NotFoundException("No se ha encontrado el usuario seguido indicado");
+            }
         }
     }
 }

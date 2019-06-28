@@ -1,10 +1,11 @@
-﻿using AutoMapper;
-using CoreGram.Data.Dto;
-using CoreGram.Data.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using CoreGram.Data.Dto;
+using CoreGram.Data.Models;
+using Profile = AutoMapper.Profile;
 
 namespace CoreGram.Helpers
 {
@@ -12,8 +13,8 @@ namespace CoreGram.Helpers
     {
         public MappingProfile()
         {
-            CreateMap<UserDto, User>();
-            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();            
+            CreateMap<User, UserDto>();                        
             CreateMap<UserInfoDto, User>();
             CreateMap<User, UserInfoDto>();
 
@@ -24,9 +25,14 @@ namespace CoreGram.Helpers
             CreateMap<Follower, FollowerDto>();
             CreateMap<Follower, FollowerInfoDto>();
 
+            CreateMap<Comment, CommentDto>();
+            CreateMap<CommentDto, Comment>();
+
             CreateMap<PostDto, Post>();
             CreateMap<Post, PostDto>();
-            CreateMap<PostInfoDto, Post>();
+            CreateMap<PostInfoDto, Post>();                        
+            CreateMap<LikeDto, Like>();
+            CreateMap<Like, LikeDto>();
         }
     }
 }

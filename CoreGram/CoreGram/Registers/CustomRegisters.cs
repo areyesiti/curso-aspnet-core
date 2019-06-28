@@ -1,9 +1,9 @@
-﻿using CoreGram.Repositories;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoreGram.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreGram.Registers
 {
@@ -11,9 +11,12 @@ namespace CoreGram.Registers
     {
         public static IServiceCollection addCustomRegisters(this IServiceCollection services)
         {
-            services.AddTransient<UserRepository>();
-            services.AddTransient<UserProfileRepository>();
-            services.AddTransient<FollowerRepository>();
+            services.AddTransient(typeof(UserRepository));
+            services.AddTransient(typeof(UserProfileRepository));
+            services.AddTransient(typeof(PostRepository));
+            services.AddTransient(typeof(FollowerRepository));
+            services.AddTransient(typeof(LikeRepository));
+            services.AddTransient(typeof(CommentRepository));
             return services;
         }
     }

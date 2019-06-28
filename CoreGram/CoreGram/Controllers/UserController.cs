@@ -1,120 +1,94 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using CoreGram.Data;
 using CoreGram.Data.Dto;
-using CoreGram.Data.Model;
+using CoreGram.Data.Models;
+using CoreGram.Helpers;
 using CoreGram.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CoreGram.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
-        DataContext _context;
-        UserRepository _repository;
+        private UserRepository _repository;
 
-        public UserController(DataContext context, UserRepository repository)
+        public UserController(UserRepository repository)
         {
-            _context = context;
             _repository = repository;
-
-            if (_context.Users.Count() == 0)
-            {
-                User user1 = new User
-                {
-                    Login = "Usuario1",
-                    Password = "Password"
-                };
-
-                User user2 = new User
-                {
-                    Login = "Usuario2",
-                    Password = "Password"
-                };
-
-                _context.Add(user1);
-                _context.Add(user2);
-                _context.SaveChanges();
-            }
         }
 
-        // GET api/users
+        /// <summary>
+        /// Autentifica un usuario
+        /// </summary>
+        /// <param name="auth"></param>  
+        [AllowAnonymous]
+        [HttpPost("Auth")]   
+        public ActionResult<AuthDto> Authenticate([FromBody]LoginDto auth)
+        {
+            return Ok(_repository.Authenticate(auth));
+        }
+
+        /// <summary>
+        /// Registra un usuario
+        /// </summary>
+        /// <param name="dto"></param>   
+        [AllowAnonymous]
+        [HttpPost("Register")]
+        public ActionResult<UserInfoDto> Register([FromBody]UserDto dto)
+        {
+            return Ok(_repository.Create(dto));
+        }
+
+
         /// <summary>
         /// Obtiene el listado de todos los usuarios
         /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public ActionResult<List<UserInfoDto>> GetAll()
+        [HttpGet]        
+        public ActionResult<IEnumerable<UserInfoDto>> GetAll()
         {            
-            return _repository.GetAll();
+            return Ok(_repository.GetAll());
         }
 
         /// <summary>
         /// Obtiene la información de un usuario
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet("{id}")]
-        public ActionResult<UserInfoDto> GetById(int id)
-        {
-            return _repository.GetById(id);
-        }
-
-        /// <summary>
-        /// Añade un usuario
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] User item)
-        {
-            await _context.Users.AddAsync(item);
-            await _context.SaveChangesAsync();
-            return Ok(item);
+        /// <param name="userId"></param> 
+        [HttpGet("{userId}")]
+        public ActionResult<UserInfoDto> GetById(int userId)
+        {            
+            return Ok(_repository.GetById(userId));
         }
 
         /// <summary>
         /// Actualiza la información de un usuario
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] User item)
+        /// <param name="userId"></param>
+        /// <param name="dto"></param>   
+        [HttpPut("{userId}")]
+        public ActionResult<UserInfoDto> Update(int userId, [FromBody]UserDto dto)
         {
-            if (id != item.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(item).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return Ok(item);
+            return Ok(_repository.Update(userId, dto));
         }
 
         /// <summary>
         /// Elimina un usuario
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var userFinded = await _context.Users.FindAsync(id);
-
-            if (userFinded == null)
-            {
-                return NotFound();
-            }
-
-            _context.Remove(userFinded);
-            await _context.SaveChangesAsync();
-            return Ok(userFinded);
+        /// <param name="userId"></param>
+        [HttpDelete("{userId}")]
+        public ActionResult<UserInfoDto> Delete(int userId)
+        {            
+            return Ok(_repository.Delete(userId));
         }
     }
 }

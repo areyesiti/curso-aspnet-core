@@ -9,6 +9,6 @@ namespace CoreGram.Data.Dto
     {
         public int UserId { get; set; }
         public int FollowerId { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; }        
     }
 }

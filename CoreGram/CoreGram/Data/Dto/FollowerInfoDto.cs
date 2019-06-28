@@ -12,7 +12,6 @@ namespace CoreGram.Data.Dto
         public DateTime Date { get; set; }
 
         public UserInfoDto UserFollower { get; set; }
-
         public UserInfoDto UserFollowing { get; set; }
     }
 }

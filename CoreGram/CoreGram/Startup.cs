@@ -35,9 +35,10 @@ namespace CoreGram
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Configuración para el cors
             services.AddCors();
 
-            // Configuración y registro de automapper
+            // Configuraciones para Automapper
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -46,49 +47,42 @@ namespace CoreGram
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
 
-            //services.AddDbContext<DataContext>(opt => opt.UseInMemoryDatabase("InstagramDB"));
+            // Registro del DbContext
+            services.AddDbContext<DataContext>(op => op.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
+            //.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
-            services.AddDbContext<DataContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
-
+            // Otras configuraciones
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(options => {
-
+                .AddJsonOptions(options =>
+                {
                     //options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver();
                     options.SerializerSettings.ContractResolver = new Newtonsoft.Json.Serialization.DefaultContractResolver();
 
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.DateFormatHandling = Newtonsoft.Json.DateFormatHandling.IsoDateFormat;
                     options.SerializerSettings.DateTimeZoneHandling = Newtonsoft.Json.DateTimeZoneHandling.Local;
-
                 });
 
-            //services.AddSwaggerGen(c =>
-            //{
-            //    c.SwaggerDoc("v1", new Info
-            //    {
-            //        Title = "Instagram API",
-            //        Version = "v1",
-            //        Description = "Práctica del curso de ASP.NET Core",
-            //        Contact = new Contact
-            //        {
-            //            Name = "Alberto Reyes",
-            //            Email = "areyes@iti.es",
-            //            Url = "http://www.iti.es"
-            //        }
-            //    });
+            // Otra forma de obtener AppSettings
+            //var appSettingsSection = Configuration.GetSection("AppSettings");
+            //services.Configure<AppSettings>(appSettingsSection);
+            //var appSettings = appSettingsSection.Get<AppSettings>();
 
-            //    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            //    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            //    c.IncludeXmlComments(xmlPath);
 
-            //});
+            // Registro de generics
+            //services.addGenericRegisters();
 
+            // Registro de repositorios en Startup
             //services.AddTransient(typeof(UserRepository));
-            //services.AddTransient<IUserRepository, UserRepository>();
-            //services.AddTransient<UserRepository>();
-            //services.AddTransient<UserProfileRepository>();
+            //services.AddTransient<UserRepository>();            
 
+            // Registro del servicio de autenticación
+            services.addAuthenticationRegisters(Configuration);
+
+            // Registro de los servicios propios
             services.addCustomRegisters();
+
+            // Registro y configuración de swagger
             services.addSwaggerRegisters();
 
         }
@@ -96,9 +90,10 @@ namespace CoreGram
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
-            
+            app.UseErrorHandlerMiddleware();
 
             //app.Use(async (context, next) =>
             //{
@@ -114,6 +109,9 @@ namespace CoreGram
             //    Console.WriteLine("Adiós desde el segundo middleware");
             //});
 
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
@@ -129,10 +127,11 @@ namespace CoreGram
                 app.UseHsts();
             }
 
-            app.UseErrorhandlerException();
-
+            // Configuración del cors
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
+            // Habilitamos el middleware para la autenticación
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

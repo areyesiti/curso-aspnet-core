@@ -10,6 +10,6 @@ namespace CoreGram.Data.Dto
         public int Id { get; set; }
         public int UserId { get; set; }
         public string Picture { get; set; }
-        public DateTime date { get; set; }        
+        public DateTime Date { get; set; }        
     }
 }

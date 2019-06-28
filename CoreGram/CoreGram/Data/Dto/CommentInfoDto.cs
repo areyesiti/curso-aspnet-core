@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoreGram.Data.Models;
 
 namespace CoreGram.Data.Dto
 {
-    public class UserInfoDto
+    public class CommentInfoDto
     {
         public int Id { get; set; }
-        public string Login { get; set; }                
-        public UserProfileDto Profile { get; set; }        
+        public string Login { get; set; }
+        public string Remark { get; set; }
     }
 }

@@ -8,17 +8,17 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoreGram.Data.Configurations
 {
-    public class PostConfiguration : IEntityTypeConfiguration<Post>
+    public class CommentConfiguration : IEntityTypeConfiguration<Comment>
     {
-        public void Configure(EntityTypeBuilder<Post> builder)
+        public void Configure(EntityTypeBuilder<Comment> builder)
         {
-            // Configuramos la primary key
-            builder.ToTable("Posts").HasKey(x => x.Id);
+            // Se configura la primary key
+            builder.ToTable("Comments").HasKey(x => x.Id);
 
-            // Configuramos la relación 1 a muchos con Posts
+            // Configuramos la relación 1 a muchos con Comments
             // y la regla de eliminación de borrado en cascada
             builder.HasOne<User>(x => x.User)
-                   .WithMany(x => x.Posts)
+                   .WithMany(x => x.Comments)
                    .HasForeignKey(x => x.UserId)
                    .OnDelete(DeleteBehavior.Cascade);
         }
