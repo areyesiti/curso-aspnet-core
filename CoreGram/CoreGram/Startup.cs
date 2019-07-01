@@ -92,9 +92,7 @@ namespace CoreGram
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-
-            app.UseErrorHandlerMiddleware();
-
+            
             //app.Use(async (context, next) =>
             //{
             //    Console.WriteLine("Hola desde el primer middleware");
@@ -129,6 +127,8 @@ namespace CoreGram
 
             // Configuración del cors
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            app.UseErrorHandlerMiddleware();
 
             // Habilitamos el middleware para la autenticación
             app.UseAuthentication();
